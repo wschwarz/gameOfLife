@@ -1,0 +1,11 @@
+{
+  "name": "GameOfLife",
+  "version": "1.0.0",
+  "description": "Rally Dev exercise",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wschwarz1986@gmail.com",
+  "license": "ISC"
+}
