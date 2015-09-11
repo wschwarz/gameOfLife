@@ -1,15 +1,21 @@
 {
   "name": "GameOfLife",
   "version": "1.0.0",
-  "description": "Rally Dev exercise",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --harmony `which gulp` test"
   },
+  "engine": "node 0.12.0",
   "author": "wschwarz1986@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "chai": "^3.2.0",
+    "gulp": "^3.9.0",
     "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "gulp-spawn-mocha": "^2.2.1"
   }
 }

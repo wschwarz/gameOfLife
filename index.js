@@ -1,14 +1,13 @@
 /*
 
-Write some code that evolves generations through the "game of life".
+Game of Life
 
 The input will be a game board of cells, either alive (1) or dead (0).
 
-The code should take this board and create a new board for the next generation based on the following rules:
+Next generation is created based on the following rules:
 
 1) Any live cell with fewer than two live neighbours dies (under- population)
 2) Any live cell with two or three live neighbours lives on to the next generation (survival)
-
 3) Any live cell with more than three live neighbours dies (overcrowding)
 4) Any dead cell with exactly three live neighbours becomes a live cell (reproduction)
 
@@ -31,20 +30,46 @@ Will have a subsequent generation of:
 */
 
 var fs = require('fs');
+var _ = require('lodash');
 var gameBoard = require('./libs/board')();
 
-var inputBoardFile;
+function main() {
+	var inputBoardFile = process.argv.slice(2)[0];
 
-process.argv.forEach(function (val, index, array) {
-	// console.log(index + ': ' + val);
-	if (index == 2) { inputBoardFile = val; }
-});
+	if (typeof inputBoardFile === "undefined") {
+		inputBoardFile = '';
 
-var inputBoard = fs.readFileSync(inputBoardFile, 'utf-8');
+		process.stdin.setEncoding('utf8');
 
+		process.stdin.on('readable', function() {
+			var chunk = process.stdin.read();
+			if (chunk !== null) {
+				console.log(chunk);
+				if (_.trim(chunk).length > 0) {
+					inputBoardFile += chunk;
+				}
+			}
+		});
 
-// console.log(inputBoard);
+		process.stdin.on('end', function() {
+			if (typeof inputBoardFile === "undefined") {
+				console.error("Please provide an input file");
+				process.exit(0);
+			}
+			gameBoard.initialize(inputBoardFile);
+			return gameBoard.newGeneration();
+		});
 
-gameBoard.initialize(inputBoard);
-gameBoard.newGeneration();
+	} else {
+
+		var inputBoard = fs.readFileSync(inputBoardFile, 'utf-8');
+
+		gameBoard.initialize(inputBoard);
+		return gameBoard.newGeneration();
+	}
+}
+
+module.exports = main;
+
+main();
 

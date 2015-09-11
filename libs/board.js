@@ -7,6 +7,7 @@ module.exports = function() {
 
 	function checkLiveNeighbors(row, col) {
 		// 9 possible neighbors
+		// TODO: return if we know we don't have to check anymore
 		var liveNeighbors = 0;
 		if (row - 1 >= 0) { liveNeighbors += checkCols(row - 1, col); }
 		liveNeighbors += checkCols(row, col, true);
@@ -38,12 +39,18 @@ module.exports = function() {
 			});
 			maxRows = board.length;
 			maxCols = board[0].length;
+			return true;
+		},
+
+		getBoardState: function() {
+			return board;
 		},
 
 		newGeneration: function() {
 			var newGeneration = new Array(maxRows);
 			console.log("Initial Board: ");
 			console.log(board);
+
 			_.forEach(board, function(row, rowIndex) {
 				newGeneration[rowIndex] = new Array(maxCols);
 				_.forEach(row, function(col, colIndex) {
