@@ -28,68 +28,7 @@ Will have a subsequent generation of:
 00000
 
 */
-
-var fs = require('fs');
-var _ = require('lodash');
-var chalk = require('chalk');
-var util = require('util');
-var gameBoard = require('./libs/board')();
-
-function main() {
-	var inputBoardFile = process.argv.slice(2)[0];
-
-	if (typeof inputBoardFile === "undefined") {
-		inputBoardFile = '';
-
-		process.stdin.setEncoding('utf8');
-
-		process.stdin.on('readable', function() {
-			var chunk = process.stdin.read();
-			if (chunk !== null) {
-				console.log(chunk);
-				if (_.trim(chunk).length > 0) {
-					inputBoardFile += chunk;
-				}
-			}
-		});
-
-		process.stdin.on('end', function() {
-			if (typeof inputBoardFile === "undefined") {
-				console.error("Please provide an input file");
-				process.exit(0);
-			}
-
-			runGame(inputBoardFile);
-
-		});
-
-	} else {
-
-		var inputBoard = fs.readFileSync(inputBoardFile, 'utf-8');
-
-		runGame(inputBoard);
-	}
-}
-
-function runGame(input) {
-	try {
-		gameBoard.initialize(input);
-
-		console.log(chalk.yellow("Initial Board: "));
-		console.log(chalk.yellow(util.inspect(gameBoard.getBoardState(), { 'depth': null })));
-
-		gameBoard.newGeneration();
-
-		console.log(chalk.green("New Generation Board: "));
-		console.log(chalk.green(util.inspect(gameBoard.getBoardState(), { 'depth': null })));
-
-	} catch (ex) {
-		console.trace(chalk.red(ex));
-		process.exit(0);
-	}
-}
-
-module.exports = main;
+var main = require('./libs/main.js');
 
 main();
 

@@ -62,4 +62,18 @@ describe('Board Lib', function () {
 		var newGenExpectedResult = [[0,0,0,0,1,0], [1,0,1,1,1,0],[1,0,1,1],[1,0,1,0,0,0],[0,1,0,0]];
 		expect(newGenExpectedResult).to.deep.equal(newGen);
 	});
+
+	it('handles empty input', function() {
+		var inputBoard = "";
+		var newBoard = require('./../libs/board')();
+		var boardCreated = newBoard.initialize(inputBoard);
+		expect(boardCreated).to.be.true;
+		expect(newBoard.getBoardState()).to.deep.equal([]);
+	});
+
+	it('handles missing file', function() {
+		var fileName = '';
+		var mainModule = require('./../libs/main.js');
+		expect(mainModule(fileName)).to.equal("Invalid File");
+	});
 });
