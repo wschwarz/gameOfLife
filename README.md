@@ -10,6 +10,10 @@
 
 ## Todo:
 
-1) check input
+1) check input - values - done
+	a) check no newlines??
 2) Optimize the check operations
-3) Tests
+3) Tests - bad input - done
+4) memoization
+5) malformed board?? - done
+6) Remove console logs until main finishes - done

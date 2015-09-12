@@ -31,6 +31,7 @@ Will have a subsequent generation of:
 
 var fs = require('fs');
 var _ = require('lodash');
+var chalk = require('chalk');
 var gameBoard = require('./libs/board')();
 
 function main() {
@@ -56,16 +57,30 @@ function main() {
 				console.error("Please provide an input file");
 				process.exit(0);
 			}
-			gameBoard.initialize(inputBoardFile);
-			return gameBoard.newGeneration();
+
+			runGame(inputBoardFile);
+
 		});
 
 	} else {
 
 		var inputBoard = fs.readFileSync(inputBoardFile, 'utf-8');
 
-		gameBoard.initialize(inputBoard);
-		return gameBoard.newGeneration();
+		runGame(inputBoard);
+	}
+}
+
+function runGame(input) {
+	try {
+		gameBoard.initialize(input);
+		console.log("Initial Board: ");
+		console.log(gameBoard.getBoardState());
+		gameBoard.newGeneration();
+		console.log("New Generation Board: ");
+		console.log(gameBoard.getBoardState());
+	} catch (ex) {
+		console.trace(chalk.red(ex));
+		process.exit(0);
 	}
 }
 

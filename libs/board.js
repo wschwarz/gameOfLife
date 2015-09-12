@@ -17,10 +17,15 @@ module.exports = function() {
 
 	function checkCols(row, col, skipSelf) {
 		var liveNeighbors = 0;
-		if (col - 1 >= 0) { liveNeighbors += board[row][col - 1]; }
-		if (!skipSelf) { liveNeighbors += board[row][col]; }
-		if (col + 1 < maxCols) { liveNeighbors += board[row][col + 1]; }
+		if (col - 1 >= 0) { liveNeighbors += getBoardValue(row, col - 1); }
+		if (!skipSelf) { liveNeighbors += getBoardValue(row, col); }
+		if (col + 1 < maxCols) { liveNeighbors += getBoardValue(row, col + 1); }
 		return liveNeighbors;
+	}
+
+	function getBoardValue(row, col) {
+		if (typeof board[row][col] === "undefined") { return 0; }
+		else { return board[row][col]; }
 	}
 
 	function amIAlive(state, liveNeighbors) {
@@ -35,7 +40,13 @@ module.exports = function() {
 		initialize: function(inputBoardState) {
 			var lines = inputBoardState.split('\n');
 			_.map(lines, function(line, index) {
-				board[index] = _.map(line.split(""), function(n) { return parseInt(n) });
+				board[index] = _.map(line.split(""), function(n) {
+					var val = parseInt(n);
+					if (!(val === 0 || val === 1)) {
+						throw new Error("Input invalid.");
+					}
+					return val;
+				});
 			});
 			maxRows = board.length;
 			maxCols = board[0].length;
@@ -48,19 +59,15 @@ module.exports = function() {
 
 		newGeneration: function() {
 			var newGeneration = new Array(maxRows);
-			console.log("Initial Board: ");
-			console.log(board);
 
 			_.forEach(board, function(row, rowIndex) {
-				newGeneration[rowIndex] = new Array(maxCols);
+				newGeneration[rowIndex] = new Array(board[rowIndex].length);
 				_.forEach(row, function(col, colIndex) {
 					var liveNeighbors = checkLiveNeighbors(rowIndex, colIndex);
 					newGeneration[rowIndex][colIndex] = amIAlive(col, liveNeighbors);
-					// console.log(rowIndex + '-' + colIndex + ':' + liveNeighbors);
 				});
 			});
-			console.log("New Generation Board: ");
-			console.log(newGeneration);
+
 			return newGeneration;
 		}
 	}

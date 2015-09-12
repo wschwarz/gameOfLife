@@ -47,4 +47,19 @@ describe('Board Lib', function () {
 		var newGenExpectedResult = [[0,0,0,0,0], [1,0,1,1,1], [1,1,1,1,1], [0,1,0,0,0], [0,0,0,0,0]];
 		expect(newGen).to.deep.equal(newGenExpectedResult);
 	});
+
+	it('throws error on bad input', function() {
+		var inputBoard = "010001\n100110\n110010\n010001\n100012";
+		var newBoard = require('./../libs/board')();
+		expect(newBoard.initialize.bind(newBoard, inputBoard)).to.throw(Error, /Input invalid./);
+	});
+
+	it('handles malformed board', function() {
+		var inputBoard = "010001\n100110\n1010\n010001\n1010";
+		var newBoard = require('./../libs/board')();
+		var boardCreated = newBoard.initialize(inputBoard);
+		var newGen = newBoard.newGeneration();
+		var newGenExpectedResult = [[0,0,0,0,1,0], [1,0,1,1,1,0],[1,0,1,1],[1,0,1,0,0,0],[0,1,0,0]];
+		expect(newGenExpectedResult).to.deep.equal(newGen);
+	});
 });
