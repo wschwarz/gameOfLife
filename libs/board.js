@@ -5,12 +5,30 @@ module.exports = function() {
 	var maxRows = 0;
 	var maxCols = 0;
 
+	/* Thought this might be faster but it would actually be the same thing since we're still doing 9 operations per space
+	possible small differences but shouldn't be enough to matter.
+	function improvedCheck() {
+		// Generate new board of live totals
+		var newBoard = new Array(maxRows - 2);
+		_.forEach(board, function(row, rowIndex) {
+			newBoard[rowIndex] = new Array(maxCols - 2);
+			_.forEach(row, function(col, colIndex) {
+				if (getBoardValue(rowIndex, colIndex) == 1) {
+					//Add 1 to each neighbor
+				}
+			})
+		})
+	}*/
+
 	function checkLiveNeighbors(row, col) {
-		// 9 possible neighbors
-		// TODO: return if we know we don't have to check anymore
+		// 8 possible neighbors
 		var liveNeighbors = 0;
 		if (row - 1 >= 0) { liveNeighbors += checkCols(row - 1, col); }
 		liveNeighbors += checkCols(row, col, true);
+
+		//small speedup since we don't care about more than 4
+		if (liveNeighbors > 3) return liveNeighbors;
+
 		if (row + 1 < maxRows) { liveNeighbors += checkCols(row + 1, col); }
 		return liveNeighbors;
 	}
@@ -28,6 +46,7 @@ module.exports = function() {
 		else { return board[row][col]; }
 	}
 
+	/* Rule Checks */
 	function amIAlive(state, liveNeighbors) {
 		if (state && liveNeighbors < 2) { return 0; } //dies
 		if (state && liveNeighbors >= 2 && liveNeighbors <= 3) { return 1; } //survival
@@ -35,11 +54,13 @@ module.exports = function() {
 		if (!state && liveNeighbors == 3) { return 1; } //repopulation
 		if (!state && liveNeighbors != 3) { return 0; } //other
 	}
+	/* end Rule Checks */
 
 	return {
 		initialize: function(inputBoardState) {
 			var lines = inputBoardState.split('\n');
 			_.map(lines, function(line, index) {
+				if (line.length == 0) { return; }
 				board[index] = _.map(line.split(""), function(n) {
 					var val = parseInt(n);
 					if (!(val === 0 || val === 1)) {
@@ -67,6 +88,8 @@ module.exports = function() {
 					newGeneration[rowIndex][colIndex] = amIAlive(col, liveNeighbors);
 				});
 			});
+
+			board = newGeneration;
 
 			return newGeneration;
 		}
